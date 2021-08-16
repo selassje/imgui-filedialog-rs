@@ -45,19 +45,17 @@ fn main() -> io::Result<()> {
     let imgui_include_path = Path::new(&cimgui_include_path).join("imgui");
 
     build
-        .include(&cimgui_include_path)
         .include(&imgui_include_path)
         .include("third-party/cimnodes/imnodes/")
         .warnings(false)
         .cpp(true)
-        .flag("-std=c++11")
-        .compile("cimnodes");
+        .flag_if_supported("-std=c++11");
 
-    // not sure if this is a great idea but imgui does it as well so lets see if this breaks some day ;)
     let compiler = build.get_compiler();
     if compiler.is_like_gnu() || compiler.is_like_clang() {
         build.flag("-fno-exceptions").flag("-fno-rtti");
     }
 
+    build.compile("cimnodes");
     Ok(())
 }

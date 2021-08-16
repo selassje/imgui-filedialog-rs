@@ -2,7 +2,7 @@ use std::ffi::c_void;
 use std::ffi::CStr;
 use std::path::PathBuf;
 
-use imgui::{im_str, ImStr, ImString};
+use imgui::{im_str, ImString};
 
 pub extern crate imgui_filedialog_sys as sys;
 
@@ -130,10 +130,7 @@ impl<'ui> Selection<'ui> {
     pub fn files(&self) -> Vec<PathBuf> {
         let mut ret = vec![];
         for i in 0..self.ptr.count {
-            let path = unsafe { ptr_to_string((*self.ptr.table.offset(i as isize)).filePathName) };
             let fixme = unsafe { ptr_to_string(sys::IGFD_GetCurrentPath(self.context.ptr)) };
-            // FIXME: Why does `path` contain same as filename?
-
             let fname = unsafe { ptr_to_string((*self.ptr.table.offset(i as isize)).fileName) };
             ret.push(std::path::PathBuf::new().join(fixme).join(fname));
         }

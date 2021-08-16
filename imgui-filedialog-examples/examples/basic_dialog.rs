@@ -1,8 +1,6 @@
 use imgui::im_str;
 mod support;
 
-use imgui_filedialog::sys;
-
 fn main() {
     let system = support::init(file!());
 
