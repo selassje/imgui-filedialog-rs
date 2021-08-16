@@ -5,7 +5,9 @@ fn main() {
     let system = support::init(file!());
 
     // Create dialog instance to store state between frame
-    let fd = imgui_filedialog::FileDialog::create("Test");
+    let fd = imgui_filedialog::FileDialog::new(im_str!("Test"))
+        .title(im_str!("Open file"))
+        .filters(im_str!(".*,.txt,.md"));
 
     system.main_loop(move |_run, ui| {
         imgui::Window::new(im_str!("Hello world"))

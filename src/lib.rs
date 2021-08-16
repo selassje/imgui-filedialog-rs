@@ -2,7 +2,7 @@ use std::ffi::c_void;
 use std::ffi::CStr;
 use std::path::PathBuf;
 
-use imgui::{im_str, ImString};
+use imgui::{im_str, ImStr, ImString};
 
 pub extern crate imgui_filedialog_sys as sys;
 
@@ -48,25 +48,37 @@ impl Drop for Context {
 pub struct FileDialog {
     id: ImString,
     context: Context,
+    title: ImString,
+    filters: ImString,
 }
 
 impl FileDialog {
-    pub fn create(id: &str) -> Self {
+    pub fn new(id: &ImStr) -> Self {
         Self {
             context: Context::new(),
-            id: ImString::new(id),
+            id: id.to_owned(),
+            title: ImString::new("Choose a File"),
+            filters: ImString::new(".*"),
         }
     }
 
-    pub fn open_modal(&self) {
-        let filters = im_str!(".*,.txt,.md");
+    pub fn title(mut self, title: &ImStr) -> Self {
+        self.title = title.to_owned();
+        self
+    }
 
+    pub fn filters(mut self, filters: &ImStr) -> Self {
+        self.filters = filters.to_owned();
+        self
+    }
+
+    pub fn open_modal(&self) {
         unsafe {
             sys::IGFD_OpenPaneModal(
                 self.context.ptr,
                 self.id.as_ptr(),
-                im_str!(" Choose a File").as_ptr(),
-                filters.as_ptr(),
+                self.title.as_ptr(),
+                self.filters.as_ptr(),
                 im_str!(".").as_ptr(),
                 im_str!("").as_ptr(),
                 None,
