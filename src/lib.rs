@@ -50,6 +50,8 @@ pub struct FileDialog {
     context: Context,
     title: ImString,
     filters: ImString,
+    min_size: [f32; 2],
+    max_size: [f32; 2],
 }
 
 impl FileDialog {
@@ -59,6 +61,8 @@ impl FileDialog {
             id: id.to_owned(),
             title: ImString::new("Choose a File"),
             filters: ImString::new(".*"),
+            min_size: [200.0, 300.0],
+            max_size: [700.0, 500.0],
         }
     }
 
@@ -69,6 +73,16 @@ impl FileDialog {
 
     pub fn filters(mut self, filters: &ImStr) -> Self {
         self.filters = filters.to_owned();
+        self
+    }
+
+    pub fn min_size(mut self, min_size: [f32; 2]) -> Self {
+        self.min_size = min_size;
+        self
+    }
+
+    pub fn max_size(mut self, max_size: [f32; 2]) -> Self {
+        self.max_size = max_size;
         self
     }
 
@@ -96,8 +110,14 @@ impl FileDialog {
                 self.context.ptr,
                 self.id.as_ptr(),
                 0,
-                sys::ImVec2 { x: 200.0, y: 300.0 },
-                sys::ImVec2 { x: 700.0, y: 500.0 },
+                sys::ImVec2 {
+                    x: self.min_size[0],
+                    y: self.min_size[1],
+                },
+                sys::ImVec2 {
+                    x: self.max_size[0],
+                    y: self.max_size[1],
+                },
             )
         }
     }

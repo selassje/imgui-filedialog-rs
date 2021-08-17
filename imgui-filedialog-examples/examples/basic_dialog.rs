@@ -11,7 +11,7 @@ fn main() {
 
     system.main_loop(move |_run, ui| {
         imgui::Window::new(im_str!("Hello world"))
-            .size([300.0, 110.0], imgui::Condition::FirstUseEver)
+            .size([600.0, 110.0], imgui::Condition::FirstUseEver)
             .build(ui, || {
                 if ui.button(im_str!("Select a file"), [0.0, 0.0]) {
                     // If button is clicked, open the modal dialog
