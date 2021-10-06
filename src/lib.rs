@@ -144,6 +144,16 @@ impl FileDialog {
         }
     }
 
+    pub fn current_file_path(&self) -> Option<String> {
+        if self.is_ok() {
+            unsafe {
+                let ptr = sys::IGFD_GetFilePathName(self.context.ptr);
+                Some(ptr_to_string(ptr))
+            }
+        } else {
+            None
+        }
+    }
     /// Files selected in dialog by user
     pub fn selection(&self) -> Option<Selection> {
         Some(unsafe { Selection::new(sys::IGFD_GetSelection(self.context.ptr), &self.context) })
